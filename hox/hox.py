@@ -1,11 +1,11 @@
 from classes.Classes import CMD
-from classes.Classes import CommandFunctions
+from classes.FileManage import FileManage
 
 
 def main() -> int:
     prefix = '/'
     CMD(
-        functions=CommandFunctions(prefix=prefix),
+        file=FileManage(prefix=prefix),
         prefix=prefix
     ).Cmd()
     return 1
