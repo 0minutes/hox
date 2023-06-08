@@ -1,8 +1,8 @@
 import os
-from Classes.Runtime import CmdCommands
+from Classes import Runtime
 
 
-class FileManageClass(CmdCommands):
+class FileManageClass(Runtime.CmdCommands):
     def __init__(self, prefix):
         super().__init__(prefix)
     
