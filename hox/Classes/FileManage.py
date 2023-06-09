@@ -1,4 +1,5 @@
 import os
+import shutil
 
 
 class FileManageClass:
@@ -13,6 +14,20 @@ class FileManageClass:
             return 1
 
         match splitPrompt[1]:
+            case 'move' | 'mv':
+                if len(splitPrompt) == 4:
+                    self.moveFile(userprompt)
+                    return 1
+
+                elif len(splitPrompt) > 3:
+                    print(f'Unknown argument {splitPrompt[-1]} for the directory in the file move branch')
+                    return 2
+
+                elif len(splitPrompt) < 4:
+                    print(f'Not enough arguments to satisfy the function -> {self.prefix}f(file) mv(move) <file dir> '
+                          f'<to dir>')
+                    return 2
+
             case 'view' | 'v':
                 if len(splitPrompt) == 3:
                     print(self.viewFile(userprompt))
@@ -62,31 +77,74 @@ class FileManageClass:
         print(f'''FILE MANAGEMENT:
         {self.prefix}f(file) c(copy) <from file dir> <to file dir> -> copies a file to another
         {self.prefix}f(file) v(view) <file dir> -> allows you to view a file
+        {self.prefix}f(file) mv(move) <from file dir> <to file dir> -> allows you to move a file
         {self.prefix}f(file) dl(del) <file dir> -> allows you to delete a file''')
+
         return 1
 
-    def fileSort(self) -> None:
-        # TODO: add file sorting
-        pass
+    @staticmethod
+    def moveFile(args: str) -> int:
+        args: list = args.split()
+        src: str = args[2]
+        dst: str = args[3]
+
+        if not os.path.isabs(src):
+            src = os.path.join(os.getcwd(), src)
+
+        if not os.path.isabs(dst):
+            dst = os.path.join(os.getcwd(), dst)
+
+        try:
+            dst_folder = os.path.dirname(dst)
+            if not os.path.exists(dst_folder):
+                os.makedirs(dst_folder)
+
+            shutil.move(src, dst)
+            print('Successfully moved the file!')
+            return 1
+
+        except FileNotFoundError:
+            print(f"File not found: {src}")
+            return 2
+
+        except PermissionError:
+            print(f"Permission denied: {src} or {dst}")
+            return 2
+
+        except IsADirectoryError:
+            print(f"Source is a directory: {src}")
+            return 2
+
+        except shutil.Error as e:
+            print(f"Error occurred while moving the file: {e}")
+            return 2
+
+        except Exception as e:
+            print(f"An unknown error occurred: {e}")
+            return 2
 
     @staticmethod
     def fileToFile(args: str) -> int:
-
         args = args.split()
 
         try:
-            with open(args[2], 'r') as InitFile, open(args[3], 'w') as EndFile:
-                contents: str = InitFile.read()
-                EndFile.write(contents)
-                print('Successfully copied the file')
-                return 1
+            with open(args[2], 'r') as initFile, open(args[3], 'w') as endFile:
+                contents: str = initFile.read()
+                endFile.write(contents)
+
+            print('Successfully copied the file')
+            return 1
 
         except FileNotFoundError:
-            print(f"The file direction '{args[2]}' doesn't exist! Double check it!")
+            print(f"The file '{args[2]}' doesn't exist! Double-check the file path.")
             return 2
 
         except PermissionError:
             print(f"Permission denied. Unable to copy file '{args[2]}'.")
+            return 2
+
+        except IsADirectoryError:
+            print(f"Cannot copy directory. Expected a file, but got '{args[2]}'.")
             return 2
 
         except Exception as e:
@@ -103,10 +161,13 @@ class FileManageClass:
                 return contents
 
         except FileNotFoundError:
-            return f"The file direction '{FilePathSplit[2]}' doesn't exist! Double check it!"
+            return f"The file '{FilePathSplit[2]}' doesn't exist! Double-check the file path."
 
         except PermissionError:
             return f"Permission denied. Unable to view file '{FilePathSplit[2]}'."
+
+        except IsADirectoryError:
+            return f"'{FilePathSplit[2]}' is a directory, not a file."
 
         except Exception as e:
             return f"An unexpected error occurred: {e}"
@@ -124,6 +185,9 @@ class FileManageClass:
 
         except PermissionError:
             return f"Permission denied. Unable to delete file '{FilePath[2]}'."
+
+        except IsADirectoryError:
+            return f"'{FilePath[2]}' is a directory, not a file."
 
         except Exception as e:
             return f"An error occurred while deleting the file '{FilePath[2]}': {str(e)}"
