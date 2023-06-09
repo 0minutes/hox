@@ -1,15 +1,10 @@
 import sys
-from Classes.Runtime import ClassCMD
-from Classes.FileManage import FileManageClass
+from Classes.Runtime import ClassCMD
 
 
 def main() -> int:
     ClassCMD(
-        prefix=sys.argv[1] if len(sys.argv) > 1 else '/',
-        filemanage=FileManageClass(
-            sys.argv[1] if len(sys.argv) > 1 else '/',
-        ),
-    ).MainLoop()
+        prefix=sys.argv[1] if len(sys.argv) > 1 else '/').MainLoop()
     return 1
 
 
