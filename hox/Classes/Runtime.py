@@ -3,9 +3,8 @@ from Classes import handler
 
 
 class ClassCMD:
-    def __init__(self, prefix: str, filemanage) -> None:
+    def __init__(self, prefix: str) -> None:
         self.prefix: str = prefix
-        self.file = filemanage
 
     def MainLoop(self) -> None:
         os.system('cls')
