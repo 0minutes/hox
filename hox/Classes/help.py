@@ -11,10 +11,9 @@ class HelpClass:
 
         match len(promptSplit):
             case 1:
-                print(f'''COMMANDS LIST
-                    {self.prefix}h(help) <command> -> shows the current messages or displays help of a provided command
-                    {self.prefix}f(file) <command> -> shows help for all the file commands or executes a given command
-                        ''')
+                print(f'''COMMANDS LIST:
+        {self.prefix}h(help) <command> -> shows the current messages or displays help of a provided command
+        {self.prefix}f(file) <command> -> shows help for all the file commands or executes a given command''')
                 return 1
 
             case 2:
