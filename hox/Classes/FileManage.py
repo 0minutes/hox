@@ -1,39 +1,35 @@
 import os
-from Classes import Runtime
 
 
-class FileManageClass(Runtime.CmdCommands):
-    def __init__(self, prefix):
-        super().__init__(prefix)
+class FileManageClass:
+    def __init__(self, prefix) -> None:
+        self.prefix: str = prefix
     
     def PromptCheck(self, userprompt) -> int:
         splitPrompt = userprompt.split()
-
-        if not (userprompt.startswith(self.prefix) and splitPrompt[0] in self.core_commands):
-            return 0
-
-        if splitPrompt[0] == f'{self.prefix}f' and len(splitPrompt) == 1:
+        ifHelp = (splitPrompt[0] == f'{self.prefix}f' and len(splitPrompt) == 1 or splitPrompt[0] == f'{self.prefix}file' and len(splitPrompt) == 1)
+        if ifHelp:
             self.fileHelp()
             return 1
 
         match splitPrompt[1]:
-            case 'view':
+            case 'view' | 'v':
                 if len(splitPrompt) == 3:
                     print(self.viewFile(userprompt))
                     return 1
 
                 elif len(splitPrompt) < 3:
-                    print(f'Not enough arguments to satisfy the function -> {self.prefix}f view <file dir>')
+                    print(f'Not enough arguments to satisfy the function -> {self.prefix}f(file) v(view) <file dir>')
                     return 2
 
                 elif len(splitPrompt) > 3:
                     print(f'Unknown argument {splitPrompt[-1]} for the directory in the file view branch')
                     return 2
 
-            case 'copy':
+            case 'copy' | 'c':
                 if len(splitPrompt) < 4:
                     print(
-                        f'Not enough arguments to satisfy the function -> {self.prefix}f copy <from file '
+                        f'Not enough arguments to satisfy the function -> {self.prefix}f(file) c(copy) <from file '
                         f'dir>'
                         f' <to file dir>')
                     return 2
@@ -42,9 +38,9 @@ class FileManageClass(Runtime.CmdCommands):
                     self.fileToFile(userprompt)
                     return 1
 
-            case 'del':
+            case 'del' | 'dl':
                 if len(splitPrompt) < 3:
-                    print(f'Not enough arguments to satisfy the function -> {self.prefix}f del <file dir>')
+                    print(f'Not enough arguments to satisfy the function -> {self.prefix}f(file) dl(del) <file dir>')
                     return 2
 
                 elif len(splitPrompt) == 3:
@@ -64,9 +60,9 @@ class FileManageClass(Runtime.CmdCommands):
 
     def fileHelp(self) -> int:
         print(f'''FILE MANAGEMENT:
-        {self.prefix}f copy <from file dir> <to file dir> -> copies a file to another
-        {self.prefix}f view <file dir> -> allows you to view a file
-        {self.prefix}f del <file dir> -> allows you to delete a file''')
+        {self.prefix}f(file) c(copy) <from file dir> <to file dir> -> copies a file to another
+        {self.prefix}f(file) v(view) <file dir> -> allows you to view a file
+        {self.prefix}f(file) dl(del) <file dir> -> allows you to delete a file''')
         return 1
 
     def fileSort(self) -> None:
