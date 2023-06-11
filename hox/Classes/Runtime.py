@@ -42,7 +42,7 @@ class ClassCMD:
             while True:
                 prompt = input(f'<{self.prefix}> ')
                 self.writeLogs(prompt=prompt)
-                if (handler.Handler(self.prefix, input(f'<{self.prefix}> ')).matchCom()) == 2: return 0
+                if (handler.Handler(self.prefix, prompt).matchCom()) == 2: return 0
 
         while True:
             if (handler.Handler(self.prefix, input(f'<{self.prefix}> ')).matchCom()) == 2: return 0
