@@ -12,6 +12,9 @@ class Handler:
         promptSplit: list = self.userprompt.split()
 
         if self.userprompt.startswith(self.prefix):
+            if promptSplit[0] == f'{self.prefix}quit' or promptSplit[0] == f'{self.prefix}q':
+                return 2
+
             if promptSplit[0] == f'{self.prefix}help' or promptSplit[0] == f'{self.prefix}h':
                 help.HelpClass(self.prefix, FileManage.FileManageClass).helpFunc(self.userprompt)
                 return 1
